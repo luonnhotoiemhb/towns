@@ -48,7 +48,7 @@ contract CreateSpaceFacet is ICreateSpace, PausableBase, ReentrancyGuard, Facet 
             SpaceOptions memory spaceOptions = SpaceOptions({to: msg.sender});
             return CreateSpaceLib.createSpaceWithPrepay(newSpaceInfo, spaceOptions);
         } else {
-            revert("CreateSpaceFacet: Invalid action");
+            revert CreateSpaceFacet__InvalidAction();
         }
     }
 
@@ -86,7 +86,9 @@ contract CreateSpaceFacet is ICreateSpace, PausableBase, ReentrancyGuard, Facet 
     }
 
     /// @dev Converts CreateSpaceOld format to CreateSpace format
-    function _convertLegacySpace(CreateSpaceOld memory spaceInfo) private pure returns (CreateSpace memory) {
+    function _convertLegacySpace(
+        CreateSpaceOld memory spaceInfo
+    ) private pure returns (CreateSpace memory) {
         MembershipRequirements memory requirements = MembershipRequirements({
             everyone: spaceInfo.membership.requirements.everyone,
             users: spaceInfo.membership.requirements.users,
@@ -98,11 +100,12 @@ contract CreateSpaceFacet is ICreateSpace, PausableBase, ReentrancyGuard, Facet 
             requirements: requirements,
             permissions: spaceInfo.membership.permissions
         });
-        return CreateSpace({
-            metadata: spaceInfo.metadata,
-            membership: membership,
-            channel: spaceInfo.channel,
-            prepay: spaceInfo.prepay
-        });
+        return
+            CreateSpace({
+                metadata: spaceInfo.metadata,
+                membership: membership,
+                channel: spaceInfo.channel,
+                prepay: spaceInfo.prepay
+            });
     }
 }

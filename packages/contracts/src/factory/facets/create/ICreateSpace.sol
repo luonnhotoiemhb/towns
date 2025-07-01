@@ -8,7 +8,7 @@ import {IArchitectBase} from "src/factory/facets/architect/IArchitect.sol";
 
 // contracts
 
-interface ICreateSpace is IArchitectBase {
+interface ICreateSpaceBase {
     /// @notice Action enum for unified space creation dispatch
     /// @dev To encode data for each action:
     ///   switch (action) {
@@ -22,12 +22,16 @@ interface ICreateSpace is IArchitectBase {
     ///       data = abi.encode(CreateSpaceOld memory spaceInfo);
     ///   }
     enum Action {
-        CreateBasic,        // Basic space creation with SpaceInfo struct
-        CreateWithPrepay,   // Space creation with prepaid memberships
-        CreateWithOptions,  // Space creation with custom deployment options
-        CreateLegacy        // Legacy space creation for backward compatibility
+        CreateBasic, // Basic space creation with SpaceInfo struct
+        CreateWithPrepay, // Space creation with prepaid memberships
+        CreateWithOptions, // Space creation with custom deployment options
+        CreateLegacy // Legacy space creation for backward compatibility
     }
 
+    error CreateSpaceFacet__InvalidAction();
+}
+
+interface ICreateSpace is IArchitectBase, ICreateSpaceBase {
     /// @notice Unified entry point for creating spaces with different configurations
     /// @param action The type of space creation to perform
     /// @param data ABI-encoded data for the specific action type
